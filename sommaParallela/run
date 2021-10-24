@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mpicc sommaPar.c -o sommaPar -lm
+
+mpiexec -np 8 ./sommaPar $1 1000
