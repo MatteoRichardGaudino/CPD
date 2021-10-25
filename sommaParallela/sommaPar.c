@@ -13,29 +13,23 @@ int main(int argc, char** argv){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
-    int commSteps = log2(worldSize);
+    int commSteps = log2(worldSize); // per strategie 2 e 3
     unsigned long long pow2 = 1;
 
-    int nums_c = 0;
-    int* nums_v;
-
-    int strategy = 1;
+    int nums_c = 0; // dimensione del vettore
+    int* nums_v; // vettore
+    int strategy = 1; // strategia per la comunicazione
 
 // ----------------------- Lettura input ----------------------
+    if(argc < 3){
+        if(rank == 0) printf("Error: usage mpiexec -np proc %s strategy filename\n", argv[0]);
+        exit(-1);
+    }
+
     if (rank == 0){
         strategy = atoi(argv[1]);
-        nums_c = atoi(argv[2]);
 
-        nums_v = malloc(sizeof(int)*nums_c);
-
-        for (int i = 0; i < nums_c; i++){
-            nums_v[i] = 1;
-        }
-    }
-    
-
-    /*if (rank == 0){
-        FILE* test = fopen("test.txt", "r");
+        FILE* test = fopen(argv[2], "r");
         
         fscanf(test, "%d" ,&nums_c);
 
@@ -43,7 +37,8 @@ int main(int argc, char** argv){
         for (int i = 0; i < nums_c; i++){
             fscanf(test, "%d", &(nums_v[i]));
         }
-    }*/
+        fclose(test);
+    }
 
 // ----------------------- Distribuzione input ----------------------
 
@@ -76,7 +71,7 @@ int main(int argc, char** argv){
     
 // ----------------------- Calcolo ----------------------
 
-    int sum = 0;
+    long long sum = 0;
     for (int i = 0; i < numToSum; i++){
         sum += nums_v[i];
     }
@@ -84,12 +79,12 @@ int main(int argc, char** argv){
 /* ----------------------- Soluzione 1 ---------------------- */
     if(strategy == 1){
         if (rank != 0){
-            MPI_Send(&sum, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+            MPI_Send(&sum, 1, MPI_LONG_LONG, 0, 0, MPI_COMM_WORLD);
         } else{
             for (int i = 1; i < worldSize; i++){
-                int sum2;
+                long long sum2;
                 MPI_Status info;
-                MPI_Recv(&sum2, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &info);
+                MPI_Recv(&sum2, 1, MPI_LONG_LONG, i, 0, MPI_COMM_WORLD, &info);
 
                 sum += sum2;
             }
@@ -100,11 +95,11 @@ int main(int argc, char** argv){
         for(int i = 0; i < commSteps; ++i){
             if((rank % pow2) == 0){
                 if((rank % (pow2 << 1)) == 0){
-                    int sum2;
-                    MPI_Recv(&sum2, 1, MPI_INT, rank + pow2, 0, MPI_COMM_WORLD, &status);
+                    long long sum2;
+                    MPI_Recv(&sum2, 1, MPI_LONG_LONG, rank + pow2, 0, MPI_COMM_WORLD, &status);
                     sum += sum2;
                 } else{
-                    MPI_Send(&sum, 1, MPI_INT, rank - pow2, 0, MPI_COMM_WORLD);
+                    MPI_Send(&sum, 1, MPI_LONG_LONG, rank - pow2, 0, MPI_COMM_WORLD);
                 }
                 pow2 <<= 1;
             }
@@ -112,14 +107,14 @@ int main(int argc, char** argv){
     } 
 /* ----------------------- Soluzione 3 ---------------------- */
     else if(strategy == 3){ 
-        int sum2;
+        long long sum2;
         for(int i = 0; i < commSteps; ++i){
             if((rank % (pow2 << 1)) < pow2){
-                MPI_Send(&sum, 1, MPI_INT, rank + pow2, 0, MPI_COMM_WORLD);
-                MPI_Recv(&sum2, 1, MPI_INT, rank + pow2, 0, MPI_COMM_WORLD, &status);
+                MPI_Send(&sum, 1, MPI_LONG_LONG, rank + pow2, 0, MPI_COMM_WORLD);
+                MPI_Recv(&sum2, 1, MPI_LONG_LONG, rank + pow2, 0, MPI_COMM_WORLD, &status);
             } else{
-                MPI_Recv(&sum2, 1, MPI_INT, rank - pow2, 0, MPI_COMM_WORLD, &status);
-                MPI_Send(&sum, 1, MPI_INT, rank - pow2, 0, MPI_COMM_WORLD);
+                MPI_Recv(&sum2, 1, MPI_LONG_LONG, rank - pow2, 0, MPI_COMM_WORLD, &status);
+                MPI_Send(&sum, 1, MPI_LONG_LONG, rank - pow2, 0, MPI_COMM_WORLD);
                 
             }
             sum += sum2;
@@ -137,8 +132,10 @@ int main(int argc, char** argv){
 
     MPI_Reduce(&localTime, &maxTime, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
 
-    if(rank == 0){
-        printf("%d =? %d %s %.10f\n", nums_c, sum, (sum == nums_c)? "OK": "ERROR", maxTime);
+    if(strategy == 3){
+        printf("[%d] %lld %.10f\n", rank, sum, localTime);
+    }else if(rank == 0){
+        printf("%lld %.10f\n", sum, maxTime);
     }
 
     MPI_Finalize();

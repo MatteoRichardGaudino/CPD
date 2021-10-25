@@ -1,3 +1,38 @@
 #!/bin/bash
 
-mpiexec -np 8 $(pwd)/sommaPar 
+# Compilation
+mpicc sommaPar.c -o sommaPar -lm
+mpicc somma.c -o somma
+
+echo "-------------- test 1 processor --------------"
+
+for f in $(ls tests)
+do
+    echo $f
+    for i in {1..5}
+    do    
+        res=$(./somma tests/$f)
+        echo $res >> results/p1$f
+        echo $res
+    done
+done
+
+
+
+for p in 2 4 8
+do
+    echo "-------------- test $p processor --------------"
+    for strat in 1 2 3
+    do
+        for f in $(ls tests)
+        do
+            echo Strategy: $strat, test: $f
+            for i in {1..5}
+            do    
+                res=$(mpiexec -np $p ./sommaPar $strat tests/$f)
+                echo $res >> results/p${p}s${strat}$f
+            done
+        done
+    done
+    
+done
