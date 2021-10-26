@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char const *argv[]){
 
-    if(argc == 0) return 1;
+    if(argc == 1) return 1;
 
     ifstream fs(argv[1], ifstream::in);
 
@@ -21,6 +21,7 @@ int main(int argc, char const *argv[]){
      fs >> s;
 
      fs >> time;
+     cout << time << endl;
 
      sum += time;
      count++;

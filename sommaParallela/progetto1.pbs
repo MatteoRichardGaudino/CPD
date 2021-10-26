@@ -1,4 +1,3 @@
-#!/bin/bash
 ##########################
 #
 #
@@ -50,24 +49,23 @@ cat hostlist
 echo
 echo ------------------------------------------------------
 echo
-PBS_O_WORKDIR=$PBS_O_HOME/CPD/sommaPar
+PBS_O_WORKDIR=$PBS_O_HOME/CPD
 
 echo Compiling with mpicc sommapar.c, somma.c
-/usr/lib64/openmpi/1.4-gcc/bin/mpicc $PBS_O_WORKDIR/somma.c -o $PBS_O_WORKDIR/somma
-/usr/lib64/openmpi/1.4-gcc/bin/mpicc $PBS_O_WORKDIR/sommaPar.c -o $PBS_O_WORKDIR/sommaPar -lm
+/usr/lib64/openmpi/1.4-gcc/bin/mpicc -std=c99 $PBS_O_WORKDIR/somma.c -o $PBS_O_WORKDIR/somma
+/usr/lib64/openmpi/1.4-gcc/bin/mpicc -std=c99 $PBS_O_WORKDIR/sommaPar.c -o $PBS_O_WORKDIR/sommaPar -lm
 
 echo compilation terminated
 echo ------------------------------------------------------
 
 echo Start testing
-# /usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile hostlist -np $NCPU $PBS_O_WORKDIR/hello
 echo "-------------- test 1 processor --------------"
 
-for f in $(ls tests)
+for f in $(ls $PBS_O_WORKDIR/tests)
 do
     echo $f
     for i in {1..5}
-    do    
+    do
         res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host1 -np 1 $PBS_O_WORKDIR/somma tests/$f)
         echo $res >> $PBS_O_WORKDIR/results/p1$f
         echo $res
@@ -82,15 +80,14 @@ do
     echo "-------------- test $p processor --------------"
     for strat in 1 2 3
     do
-        for f in $(ls tests)
+        for f in $(ls $PBS_O_WORKDIR/tests)
         do
             echo Strategy: $strat, test: $f
             for i in {1..5}
-            do    
+            do
                 res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host$p -np $p $PBS_O_WORKDIR/sommaPar $strat $PBS_O_WORKDIR/tests/$f)
                 echo $res >> $PBS_O_WORKDIR/results/p${p}s${strat}$f
             done
         done
     done
-    
 done
