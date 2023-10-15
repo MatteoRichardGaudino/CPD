@@ -19,7 +19,7 @@
 ##########################################
 #
 #
-# qualche informazione sul job #
+# Somma di numeri parallela e distribuita.
 #
 #
 ##########################################
@@ -71,21 +71,20 @@ do
 done
 
 
-#for p in 2 4 8
-#do
-#   head -$p hostlist > host$p
-#    echo "-------------- test $p processor --------------"
-#    for strat in 1 2 3
-#    do
-#        for f in $(ls $PBS_O_WORKDIR/tests)
-#        do
-#            echo Strategy: $strat, test: $f
-#            for i in {1..5}
-#            do
-#                res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host$p -np $p $PBS_O_WORKDIR/sommaPar 
-#-s $strat -f $PBS_O_WORKDIR/tests/$f)
-#                echo $res >> $PBS_O_WORKDIR/results/p${p}s${strat}$f
-#            done
-#        done
-#    done
-#done
+for p in 2 4 8
+do
+   head -$p hostlist > host$p
+    echo "-------------- test $p processor --------------"
+    for strat in 1 2 3
+    do
+        for n in 100 1000 10000 100000 1000000 10000000
+        do
+            echo Strategy: $strat, test: $n numbers
+            for i in {1..5}
+            do
+                res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host$p -np $p $PBS_O_WORKDIR/sommaPar $strat $n)
+                echo $res >> $PBS_O_WORKDIR/results/p${p}s${strat}$n.txt
+            done
+        done
+    done
+done
