@@ -7,7 +7,7 @@
 #
 ##########################
 #PBS -q studenti
-#PBS -l nodes=8:ppn=8
+#PBS -l nodes=8
 #PBS -N progetto1
 #PBS -o progetto1.out
 #PBS -e progetto1.err
@@ -51,7 +51,7 @@ echo ------------------------------------------------------
 echo
 PBS_O_WORKDIR=$PBS_O_HOME/CPD
 
-/usr/lib64/openmpi/1.4-gcc/bin/mpicc -std=gnu99 $PBS_O_WORKDIR/sommaPar.c -o $PBS_O_WORKDIR/sommaPar -lm
+/usr/lib64/openmpi/1.4-gcc/bin/mpicc -std=c99 $PBS_O_WORKDIR/sommaPar.c -o $PBS_O_WORKDIR/sommaPar -lm
 
 echo compilation terminated
 echo ------------------------------------------------------
@@ -60,13 +60,13 @@ echo Start testing
 echo "-------------- test 1 processor --------------"
 
 head -1 hostlist > host1
-for f in $(ls $PBS_O_WORKDIR/tests)
+for n in 100 1000 10000 100000 1000000 10000000
 do
-    echo Test: $f
+    echo Test: $n numbers
     for i in {1..5}
     do
-        res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host1 -np 1 $PBS_O_WORKDIR/sommaPar -f $PBS_O_WORKDIR/tests/$f)
-        echo $res >> $PBS_O_WORKDIR/results/p1$f
+        res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host1 -np 1 $PBS_O_WORKDIR/sommaPar 1 $n)
+        echo $res >> $PBS_O_WORKDIR/results/p1_$n.txt
     done
 done
 
