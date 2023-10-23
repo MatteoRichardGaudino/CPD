@@ -1,0 +1,46 @@
+------------------------------------------------------
+PBS: qsub is running on ui-studenti.scope.unina.it
+PBS: originating queue is studenti
+PBS: executing queue is studenti
+PBS: working directory is /homes/DMA/PDC/2024/VLTCLD00T/esercizio1
+PBS: execution mode is PBS_BATCH
+PBS: job identifier is 4013043.torque02.scope.unina.it
+PBS: job name is portate_pazienza
+PBS: node file is /var/spool/pbs/aux//4013043.torque02.scope.unina.it
+PBS: number of nodes is
+PBS: current home directory is /homes/DMA/PDC/2024/VLTCLD00T
+PBS: PATH = /usr/lib64/openmpi/1.2.7-gcc/bin:/usr/kerberos/bin:/opt/exp_soft/unina.it/intel/composer_xe_2013_sp1.3.174/bin/intel64:/opt/exp_soft/unina.it/intel/composer_xe_2013_sp1.3.174/mpirt/bin/intel64:/opt/exp_soft/unina.it/intel/composer_xe_2013_sp1.3.174/bin/intel64:/opt/exp_soft/unina.it/intel/composer_xe_2013_sp1.3.174/bin/intel64_mic:/opt/exp_soft/unina.it/intel/composer_xe_2013_sp1.3.174/debugger/gui/intel64:/opt/d-cache/srm/bin:/opt/d-cache/dcap/bin:/opt/edg/bin:/opt/glite/bin:/opt/globus/bin:/opt/lcg/bin:/usr/local/bin:/bin:/usr/bin:/opt/exp_soft/HADOOP/hadoop-1.0.3/bin:/opt/exp_soft/unina.it/intel/composerxe/bin/intel64/:/opt/exp_soft/unina.it/MPJExpress/mpj-v0_38/bin:/homes/DMA/PDC/2024/VLTCLD00T/bin
+------------------------------------------------------
+
+Job reserved nodes:
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+wn280.scope.unina.it
+
+------------------------------------------------------
+
+wn280.scope.unina.it
+
+------------------------------------------------------
+
+compilation terminated
+------------------------------------------------------
+Start testing
+-------------- test 1 processor --------------
+-------------- test 2 processor --------------
+Strategy: 1, test: 100000000 numbers
+Strategy: 2, test: 100000000 numbers
+Strategy: 3, test: 100000000 numbers
+-------------- test 4 processor --------------
+Strategy: 1, test: 100000000 numbers
+Strategy: 2, test: 100000000 numbers
+Strategy: 3, test: 100000000 numbers
+-------------- test 8 processor --------------
+Strategy: 1, test: 100000000 numbers
+Strategy: 2, test: 100000000 numbers
+Strategy: 3, test: 100000000 numbers

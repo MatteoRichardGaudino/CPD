@@ -1,0 +1,21 @@
+/homes/DMA/PDC/2024/VLTCLD00T/esercizio1/CPD/sommaPar.c:192:2: warning: no newline at end of file
+/var/spool/pbs/mom_priv/jobs/4013043.torque02.scope.unina.it.SC: line 73: :
+head -1 hostlist > host1
+for n in 100000000 1000000000
+do
+    echo Test: $n numbers
+    for i in {1..5}
+    do
+        res=$(/usr/lib64/openmpi/1.4-gcc/bin/mpiexec -machinefile host1 -np 1 $PBS_O_WORKDIR/sommaPar 1 $n)
+        echo $res >> $PBS_O_WORKDIR/results/p1_$n.txt
+    done
+done
+: No such file or directory
+=>> PBS: job killed: walltime 309 exceeded limit 300
+mpiexec: killing job...
+
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 0 with PID 17120 on node wn280.scope.unina.it exited on signal 0 (Unknown signal 0).
+--------------------------------------------------------------------------
+mpiexec: clean termination accomplished
+
