@@ -1,6 +1,7 @@
 /**
- *  Autore: Matteo Richard Gaudino
- *  Matricola: N86003226
+ *  Autori:
+ *      Matteo Richard Gaudino N86003226
+ *      Claudio Velotti N86002882
  * **/
 
 #include <mpi.h> // Recv, Send, ...
