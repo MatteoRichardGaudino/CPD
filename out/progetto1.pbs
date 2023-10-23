@@ -59,7 +59,6 @@ echo ------------------------------------------------------
 echo Start testing
 echo "-------------- test 1 processor --------------"
 
-:'
 head -1 hostlist > host1
 for n in 100 1000 10000 100000 1000000 10000000 100000000 1000000000
 do
@@ -70,7 +69,7 @@ do
         echo $res >> $PBS_O_WORKDIR/results/p1_$n.txt
     done
 done
-'
+
 
 for p in 2 4 8
 do
